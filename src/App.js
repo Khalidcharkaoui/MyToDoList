@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import FormularioTarea from "./FormularioTarea";
 import ListaTareas from "./ListaTareas";
+import ContadorTareas from "./ContadorTareas";
 
 export default class Aplicacion extends Component {
   constructor(props) {
@@ -9,30 +10,94 @@ export default class Aplicacion extends Component {
     this.state = {
       tareas: [],
       nuevoTextoTarea: "",
-
+      totalTareas: 0,
+      tareasPendientes: 0,
     };
+  }
+
+  componentDidMount(){
+    this.actualizarConteoTareas();
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if (prevState.tareas !== this.state.tareas){
+      this.actualizarConteoTareas();
+    }
+  }
+
+  actualizarConteoTareas() {
+    const { tareas } = this.state;
+    const totalTareasCount = tareas.length;
+    const tareasPendientesCount = tareas.filter((tarea) => !tarea.completada).length;
+
+    this.setState({
+      totalTareas: totalTareasCount,
+      tareasPendientes : tareasPendientesCount,
+    });
+
   }
 
   agregarTarea = (e) => {
     e.preventDefault();
 
-    const { nuevoTextoTarea } = this.state;
+    this.setState((prevState) => {
+      const {nuevoTextoTarea, tareas } = prevState;
 
     if (nuevoTextoTarea.trim() !== ""){
-      const nuevaTarea = {
-        id: Date.now(),
+      return{
+        tareas: [
+          ...tareas,
+          {
+        id: tareas.length + 1,
         texto: nuevoTextoTarea,
+        completada: false,
+      },
+    ],
+    nuevoTextoTarea: "",
+  };
+}
+return prevState;
+    });
+  };
 
+  alternarTarea= (idTarea) => {
+    this.setState((prevState) => ({ 
+      tareas: prevState.tareas.map((tarea) => 
+      tarea.id === idTarea? {...tarea, completada: !tarea.completada } : tarea
+      ),
+    }));
+  };
+
+  eliminarTarea = (idTarea) => {
+    this.setState((prevState) => ({
+      tareas : prevState.tareas.filter((tarea) =>
+      tarea.id === idTarea ? { ...tarea, completada: !tarea.completada } : tarea
+      ),
+  }));
+};
+
+  editarTarea = (idTarea, nuevoTexto ) => {
+    this.setState((prevState) => {
+      const tareasActualizadas = prevState.tareas.map((tarea) =>
+        tarea.id === idTarea ? { ...tarea, texto: nuevoTexto } : tarea
+      );
+
+      return {
+        tareas: tareasActualizadas,
       };
-
-      this.setState((prevState) => ({
-        tareas: [...prevState.tareas, nuevaTarea],
-      }));
-      }
-    }
-
+    });
+  };
+   
+  completarTarea = (idTarea) => {
+    this.setState((prevState) => ({
+      tareas: prevState.tareas.map((tarea) =>
+        tarea.id === idTarea ? { ...tarea, completada: true } : tarea
+      ),
+    }));
+  };
+  
     render(){
-      const {nuevoTextoTarea, tareas} = this.state;
+      const {nuevoTextoTarea, tareas, totalTareas, tareasPendientes} = this.state;
 
       return(
         <div>
@@ -44,8 +109,12 @@ export default class Aplicacion extends Component {
           />
           <ListaTareas
           tareas={tareas}
+          alternarTarea={this.alternarTarea}
+          eliminarTarea={this.eliminarTarea}
+          editarTarea={this.editarTarea}
+          completarTarea={this.completarTarea}
           />
-
+          <ContadorTareas totalTareas={totalTareas} tareasPendientes={tareasPendientes} />
         </div>
       )
     }

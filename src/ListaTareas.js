@@ -4,7 +4,7 @@ import ElementoTarea from "./ElementoTarea";
 export default class ListaTareas extends Component {
 
     render(){
-        const { tareas } = this.props;
+        const { tareas, alternaTarea, eliminarTarea, editarTarea, completarTarea } = this.props;
 
         return(
             <div>
@@ -12,6 +12,10 @@ export default class ListaTareas extends Component {
                 <ElementoTarea
                 key={tarea.id}
                 task={tarea}
+                alternaTarea={alternaTarea}
+                eliminarTarea={eliminarTarea}
+                editarTarea={editarTarea}
+                completarTarea={completarTarea}
                 />
             
             ))}

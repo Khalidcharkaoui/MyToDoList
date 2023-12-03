@@ -15,7 +15,7 @@ export default class FormularioTarea extends Component{
                 value={nuevoTextoTarea}
                 onChange={(e) => establecerNuevoTextoTarea(e.target.value)}
                 />
-                <button onClick={agregarTarea}></button>
+                <button onClick={agregarTarea}>agregarTarea</button>
             </div>
         )
     }
