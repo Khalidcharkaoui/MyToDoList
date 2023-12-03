@@ -7,7 +7,7 @@ export default class ListaTareas extends Component {
         const { tareas, alternaTarea, eliminarTarea, editarTarea, completarTarea } = this.props;
 
         return(
-            <div>
+            <div className="tarea-lista">
                 {tareas.map((tarea) => (
                 <ElementoTarea
                 key={tarea.id}

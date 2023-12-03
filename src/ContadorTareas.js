@@ -5,7 +5,7 @@ export default class ContadorTareas extends Component{
         const{ totalTareas, tareasPendientes } = this.props;
 
         return(
-            <div>
+            <div className="conteo-tareas">
                 <p>Total de tareas: {totalTareas}</p>
                 <p>Tareas pendientes: {tareasPendientes}</p>
             </div>

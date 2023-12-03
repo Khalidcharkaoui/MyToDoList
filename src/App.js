@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+import axios from "axios";
 import FormularioTarea from "./FormularioTarea";
 import ListaTareas from "./ListaTareas";
 import ContadorTareas from "./ContadorTareas";
+
+const API_BASE_URL = "";
 
 export default class Aplicacion extends Component {
   constructor(props) {
@@ -16,84 +19,100 @@ export default class Aplicacion extends Component {
   }
 
   componentDidMount(){
-    this.actualizarConteoTareas();
+    this.obtenerTareas();
   }
 
-  componentDidUpdate(prevProps, prevState){
-    if (prevState.tareas !== this.state.tareas){
-      this.actualizarConteoTareas();
+  async obtenerTareas(){
+
+    try{
+
+      const respuesta = await axios.get(`${API_BASE_URL}/tareas`);
+      const {tareas, total_tareas, tareas_pendientes } = respuesta.data;
+
+      this.setState({
+
+        tareas,
+        totalTareas: total_tareas,
+        tareasPendientes: tareas_pendientes,
+
+      });
+    } catch(error) {
+      console.error("Error al obtener las tareas:", error);
     }
-  }
+      }
+    
+    agregarTarea = async(e) => {
+      e.preventDefault();
 
-  actualizarConteoTareas() {
-    const { tareas } = this.state;
-    const totalTareasCount = tareas.length;
-    const tareasPendientesCount = tareas.filter((tarea) => !tarea.completada).length;
+      const { nuevoTextoTarea } = this.state;
+
+      if (nuevoTextoTarea.trim() !== ""){
+        try{
+          await axios.post(`${API_BASE_URL}tareas`, {
+            texto: nuevoTextoTarea,
+            completada: false,
+          });
+
+    this.obtenerTareas();
 
     this.setState({
-      totalTareas: totalTareasCount,
-      tareasPendientes : tareasPendientesCount,
+      nuevoTextoTarea:"",
+
+    });
+        } catch (error){
+          console.error("error al agregar la tarea:", error);
+      }
+    }
+  };
+
+   alternarTarea = async (idTarea) => {
+    try{
+      await axios.put(`${API_BASE_URL}/tareas/${idTarea}`, {
+      completada: !this.obtenerTareaPorId(idTarea).completada,
+
+      });
+  
+    this.obtenerTareas();
+    } catch (error){
+      console.error("Error al alternar tarea:", error)
+    }
+  };
+
+  eliminarTarea = async (idTarea) => {
+     try{
+      await axios.delete(`${API_BASE_URL}/tareas/{idTarea}`);
+
+      this.obtenerTareas();
+     } catch(error){
+      console.error("error al eliminar la tarea:", error);
+     }
+    };
+
+  editarTarea = async(idTarea, nuevoTexto) =>{
+    try{
+      await axios.put(`${API_BASE_URL}/tareas/${idTarea}`,{texto: nuevoTexto
     });
 
+  this.obtenerTareas();
+
+  } catch (error){
+    console.error("Error al editar la tarea:", error);
   }
-
-  agregarTarea = (e) => {
-    e.preventDefault();
-
-    this.setState((prevState) => {
-      const {nuevoTextoTarea, tareas } = prevState;
-
-    if (nuevoTextoTarea.trim() !== ""){
-      return{
-        tareas: [
-          ...tareas,
-          {
-        id: tareas.length + 1,
-        texto: nuevoTextoTarea,
-        completada: false,
-      },
-    ],
-    nuevoTextoTarea: "",
-  };
-}
-return prevState;
-    });
-  };
-
-  alternarTarea= (idTarea) => {
-    this.setState((prevState) => ({ 
-      tareas: prevState.tareas.map((tarea) => 
-      tarea.id === idTarea? {...tarea, completada: !tarea.completada } : tarea
-      ),
-    }));
-  };
-
-  eliminarTarea = (idTarea) => {
-    this.setState((prevState) => ({
-      tareas : prevState.tareas.filter((tarea) =>
-      tarea.id === idTarea ? { ...tarea, completada: !tarea.completada } : tarea
-      ),
-  }));
 };
 
-  editarTarea = (idTarea, nuevoTexto ) => {
-    this.setState((prevState) => {
-      const tareasActualizadas = prevState.tareas.map((tarea) =>
-        tarea.id === idTarea ? { ...tarea, texto: nuevoTexto } : tarea
-      );
-
-      return {
-        tareas: tareasActualizadas,
-      };
+  completarTarea = async (idTarea) => {
+    try{
+      await axios.put(`${API_BASE_URL}/tareas/${idTarea}`, {completada: true
     });
+
+  this.obtenerTareas();
+  } catch (error) {
+    console.error("error al completar la tarea:", error)
+  }
   };
-   
-  completarTarea = (idTarea) => {
-    this.setState((prevState) => ({
-      tareas: prevState.tareas.map((tarea) =>
-        tarea.id === idTarea ? { ...tarea, completada: true } : tarea
-      ),
-    }));
+
+  obtenerTareaPorId = (idTarea) => {
+    return this.state.tareas.find((tarea) => tarea.id ===idTarea);
   };
   
     render(){

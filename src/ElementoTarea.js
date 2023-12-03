@@ -1,5 +1,6 @@
 import React, { Component} from "react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faEdit, faSave, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -7,21 +8,33 @@ export default class ElementoTarea extends Component{
     constructor(props){
         super(props);
         this.state= {
-         editando: false,
-         textoEditado: props.tarea ? props.tarea.texto : "",
+         isOpenModal: false,
+         textoEditado: props.tarea.texto,
         };
     }
 
+    abrirModal =() => {
+        this.setState({ isOpenModal: true })
+    };
+
+    cerrarModal = () => {
+        this.setState({ isOpenModal: false})
+    };
+
     manejarEdicion=() => {
-        this.setState((prevState) => ({
-          editando: !prevState.editando,  
-        }));
-    
-        if (!this.state.editando) {
-            // para guardar cambios una vez la edicion se haya completado
-            const {tarea, editarTarea} = this.props;
-            editarTarea(tarea.id, this.state.textoEditado)
-        }
+       const {tarea, editarTarea } = this.props;
+
+       this.abrirModal();
+
+       this.setState({textoEditado: tarea.texto});
+
+       const guardarCambios=() => {
+        editarTarea(tarea.id, this.state.textoEditado);
+        this.cerrarModal();
+       };
+
+       this.setState({guardarCambios});
+
     };
 
     manejarCambioTexto = (e) => {
@@ -30,36 +43,38 @@ export default class ElementoTarea extends Component{
 
     render() {
       const {tarea, alternaTarea, eliminarTarea, completarTarea}= this.props;
-      const {editando, textoEditado} = this.state;
+      const {textoEditado, isOpenModal, guardarCambios} = this.state;
 
       return(
-        <div>
-            { tarea? (
-        <div>
-         {editando ? (
-                    <input
-                     type="text"
-                     value={textoEditado}
-                     onChange={this.manejarCambioTexto}
-                     />
-                )
-                :(
-                    <span onClick={() => alternaTarea(tarea.id)}> {tarea.texto} </span>
-                )}
-                <div>
-                    <button onClick={this.manejarEdicion}></button>
-                    <button onClick={() => eliminarTarea(tarea.id)}></button>
-                    {!editando && (
-                        <button
-                         onClick={() => completarTarea(tarea.id)}
-                         disabled={tarea.completada}
-                         ></button>
-                    )}
-                </div>
-            </div>
-            ): null}
-            </div>
-        );
+        <div className={`tarea-elemento ${tarea.completada? "completada": ""}`}>
+            <span on onClick={() => alternaTarea(tarea.id)}>{tarea.texto}</span>
+        
+        {isOpenModal && (
+            <div className="modal">
+                <input type="text" value={textoEditado}
+                onChange={this.manejarCambioTexto}/>
+                <button onClick={guardarCambios}>
+                    <FontAwesomeIcon icon={faSave}/> 
+                </button>
+                <button onClick={this.cerrarModal}>
+                </button>
+        </div>
+        )}
+        <div className="butones">
+            <button onClick={this.manejarEdicion}>
+                <FontAwesomeIcon icon ={faEdit}/>
+            </button>
+            <button onClick={() => eliminarTarea(tarea.id)}>
+                <FontAwesomeIcon icon={faTrash}/>
+            </button>
+            <button
+            onClick={() => completarTarea(tarea.id)}
+            disabled={tarea.completada}
+            >
+                <FontAwesomeIcon icon={faCheck}/>
+            </button>
+        </div>
+        </div>
+      );
+        }
     }
-
-}
