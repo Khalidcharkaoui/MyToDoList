@@ -7,20 +7,20 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default class FormularioTarea extends Component{
     render(){
-        const {nuevoTextoTarea, establecerNuevoTextoTarea, agregarTarea} = this.props;
+        const {newTaskText, setNewTaskText, addTask} = this.props;
 
         return(
-            <div className="tarea-formu">
+            <div className="task-form">
                 <input
                 type="text"
                 placeholder="Nueva Tarea"
-                value={nuevoTextoTarea}
-                onChange={(e) => establecerNuevoTextoTarea(e.target.value)}
+                value={newTaskText}
+                onChange={(e) => setNewTaskText(e.target.value)}
                 />
-                <button onClick={agregarTarea}>
+                <button onClick={addTask}>
                     <FontAwesomeIcon icon={faPlus}/>
                 </button>
             </div>
         );
     }
-}
+};

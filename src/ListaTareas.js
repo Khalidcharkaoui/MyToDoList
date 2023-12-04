@@ -4,18 +4,18 @@ import ElementoTarea from "./ElementoTarea";
 export default class ListaTareas extends Component {
 
     render(){
-        const { tareas, alternaTarea, eliminarTarea, editarTarea, completarTarea } = this.props;
+        const { tasks, toggleTask, deleteTask, editTask, completeTask } = this.props;
 
         return(
-            <div className="tarea-lista">
-                {tareas.map((tarea) => (
+            <div className="task-list">
+                {tasks.map((task) => (
                 <ElementoTarea
-                key={tarea.id}
-                task={tarea}
-                alternaTarea={alternaTarea}
-                eliminarTarea={eliminarTarea}
-                editarTarea={editarTarea}
-                completarTarea={completarTarea}
+                key={task.id}
+                task={task}
+                toggleTask={toggleTask}
+                deleteTask={deleteTask}
+                editTask={editTask}
+                completeTask={completeTask}
                 />
             
             ))}

@@ -8,68 +8,69 @@ export default class ElementoTarea extends Component{
     constructor(props){
         super(props);
         this.state= {
-         isOpenModal: false,
-         textoEditado: props.tarea.texto,
+         isModalOpen: false,
+         editedText: props.task.text,
         };
     }
 
-    abrirModal =() => {
-        this.setState({ isOpenModal: true })
+    openModal =() => {
+        this.setState({ isModalOpen: true });
     };
 
-    cerrarModal = () => {
-        this.setState({ isOpenModal: false})
+    closeModal = () => {
+        this.setState({ isModalOpen: false});
     };
 
-    manejarEdicion=() => {
-       const {tarea, editarTarea } = this.props;
+    handleEdit=() => {
+       const { task, editTask } = this.props;
 
-       this.abrirModal();
+       this.openModal();
 
-       this.setState({textoEditado: tarea.texto});
+       this.setState({ editedText: task.text});
 
-       const guardarCambios=() => {
-        editarTarea(tarea.id, this.state.textoEditado);
-        this.cerrarModal();
+       const saveChanges = () => {
+        editTask(task.id, this.state.editedText);
+        this.closeModal();
        };
 
-       this.setState({guardarCambios});
+       this.setState({ saveChanges });
 
     };
 
-    manejarCambioTexto = (e) => {
-        this.setState({textoEditado: e.target.value })
+    handleTextChange = (e) => {
+        this.setState({ editedText: e.target.value })
     };
 
     render() {
-      const {tarea, alternaTarea, eliminarTarea, completarTarea}= this.props;
-      const {textoEditado, isOpenModal, guardarCambios} = this.state;
+      const { task, toggleTask, deleteTask, completeTask}= this.props;
+      const { editedText, isModalOpen, saveChanges} = this.state;
 
       return(
-        <div className={`tarea-elemento ${tarea.completada? "completada": ""}`}>
-            <span on onClick={() => alternaTarea(tarea.id)}>{tarea.texto}</span>
+        <div className={`task-item ${task.completed ? "completed" : ""}`}>
+            <span on onClick={() => toggleTask(task.id)}>{task.text}</span>
         
-        {isOpenModal && (
+        {isModalOpen && (
             <div className="modal">
-                <input type="text" value={textoEditado}
-                onChange={this.manejarCambioTexto}/>
-                <button onClick={guardarCambios}>
-                    <FontAwesomeIcon icon={faSave}/> 
+                <input type="text" value={editedText} onChange={this.handleTextChange} />
+                <button onClick={saveChanges}>
+                    <FontAwesomeIcon icon={faSave}/> Guardar
                 </button>
-                <button onClick={this.cerrarModal}>
+                <button onClick={this.closeModal}>
+                    Cancelar
                 </button>
         </div>
         )}
-        <div className="butones">
-            <button onClick={this.manejarEdicion}>
+
+        <div className="buttons">
+            <button onClick={this.handleEdit}>
                 <FontAwesomeIcon icon ={faEdit}/>
             </button>
-            <button onClick={() => eliminarTarea(tarea.id)}>
+            <button onClick={() => deleteTask(task.id)}>
                 <FontAwesomeIcon icon={faTrash}/>
             </button>
             <button
-            onClick={() => completarTarea(tarea.id)}
-            disabled={tarea.completada}
+            onClick={() => completeTask(task.id)}
+            disabled={task.completed}
             >
                 <FontAwesomeIcon icon={faCheck}/>
             </button>

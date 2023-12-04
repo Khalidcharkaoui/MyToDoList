@@ -4,36 +4,36 @@ import FormularioTarea from "./FormularioTarea";
 import ListaTareas from "./ListaTareas";
 import ContadorTareas from "./ContadorTareas";
 
-const API_BASE_URL = "";
+const API_BASE_URL = "http://127.0.0.1:5000";
 
-export default class Aplicacion extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tareas: [],
-      nuevoTextoTarea: "",
-      totalTareas: 0,
-      tareasPendientes: 0,
+      tasks: [],
+      newTaskText: "",
+      totalTasks: 0,
+      pendingTasks: 0,
     };
   }
 
   componentDidMount(){
-    this.obtenerTareas();
+    this.fetchTasks();
   }
 
-  async obtenerTareas(){
+  async fetchTasks(){
 
     try{
 
-      const respuesta = await axios.get(`${API_BASE_URL}/tareas`);
-      const {tareas, total_tareas, tareas_pendientes } = respuesta.data;
+      const respuesta = await axios.get(`${API_BASE_URL}/tasks`);
+      const {tasks, total_tasks, pending_tasks } = respuesta.data;
 
       this.setState({
 
-        tareas,
-        totalTareas: total_tareas,
-        tareasPendientes: tareas_pendientes,
+        tasks,
+        totalTasks: total_tasks,
+        pendingTasks: pending_tasks,
 
       });
     } catch(error) {
@@ -41,22 +41,22 @@ export default class Aplicacion extends Component {
     }
       }
     
-    agregarTarea = async(e) => {
+    addTask = async(e) => {
       e.preventDefault();
 
-      const { nuevoTextoTarea } = this.state;
+      const { newTaskText } = this.state;
 
-      if (nuevoTextoTarea.trim() !== ""){
+      if (newTaskText.trim() !== ""){
         try{
-          await axios.post(`${API_BASE_URL}tareas`, {
-            texto: nuevoTextoTarea,
-            completada: false,
+          await axios.post(`${API_BASE_URL}/tasks`, {
+            text: newTaskText,
+            completed: false,
           });
 
-    this.obtenerTareas();
+    this.fetchTasks();
 
     this.setState({
-      nuevoTextoTarea:"",
+      newTaskText:"",
 
     });
         } catch (error){
@@ -65,77 +65,75 @@ export default class Aplicacion extends Component {
     }
   };
 
-   alternarTarea = async (idTarea) => {
+   toggleTask = async (taskId) => {
     try{
-      await axios.put(`${API_BASE_URL}/tareas/${idTarea}`, {
-      completada: !this.obtenerTareaPorId(idTarea).completada,
+      await axios.put(`${API_BASE_URL}/tasks/${taskId}`, {
+      completed: !this.getTaskById(taskId).completed,
 
       });
   
-    this.obtenerTareas();
+    this.fetchTasks();
     } catch (error){
-      console.error("Error al alternar tarea:", error)
+      console.error("Error al alternar tarea:", error);
     }
   };
 
-  eliminarTarea = async (idTarea) => {
+  deleteTask = async (taskId) => {
      try{
-      await axios.delete(`${API_BASE_URL}/tareas/{idTarea}`);
+      await axios.delete(`${API_BASE_URL}/tasks/${taskId}`);
 
-      this.obtenerTareas();
+      this.fetchTasks();
      } catch(error){
       console.error("error al eliminar la tarea:", error);
      }
     };
 
-  editarTarea = async(idTarea, nuevoTexto) =>{
+  editTask = async(taskId, newText) =>{
     try{
-      await axios.put(`${API_BASE_URL}/tareas/${idTarea}`,{texto: nuevoTexto
-    });
+      await axios.put(`${API_BASE_URL}/tasks/${taskId}`,{text: newText});
 
-  this.obtenerTareas();
+   this.fetchTasks();
 
   } catch (error){
     console.error("Error al editar la tarea:", error);
   }
 };
 
-  completarTarea = async (idTarea) => {
+  completeTask = async (taskId) => {
     try{
-      await axios.put(`${API_BASE_URL}/tareas/${idTarea}`, {completada: true
-    });
+      await axios.put(`${API_BASE_URL}/tasks/${taskId}`, {completed: true});
 
-  this.obtenerTareas();
+    this.fetchTasks();
   } catch (error) {
-    console.error("error al completar la tarea:", error)
+    console.error("error al completar la tarea:", error);
   }
   };
 
-  obtenerTareaPorId = (idTarea) => {
-    return this.state.tareas.find((tarea) => tarea.id ===idTarea);
+  getTaskById = (taskId) => {
+    return this.state.tareas.find((task) => task.id === taskId);
   };
   
     render(){
-      const {nuevoTextoTarea, tareas, totalTareas, tareasPendientes} = this.state;
+      const {newTaskText, tasks, totalTasks, pendingTasks } = this.state;
 
       return(
-        <div>
+        <div className="app-container">
           <h1> Lista de Tareas </h1>
           <FormularioTarea
-          nuevoTextoTarea={nuevoTextoTarea}
-          establecerNuevoTextoTarea={(texto) => this.setState({nuevoTextoTarea : texto})}
-          agregarTarea={this.agregarTarea}
+          newTaskText={newTaskText}
+          setNewTaskText={(text) => this.setState({newTaskText : text})}
+          addTask={this.addTask}
           />
           <ListaTareas
-          tareas={tareas}
-          alternarTarea={this.alternarTarea}
-          eliminarTarea={this.eliminarTarea}
-          editarTarea={this.editarTarea}
-          completarTarea={this.completarTarea}
+          tasks={tasks}
+          toggleTask={this.toggleTask}
+          deleteTask={this.deleteTask}
+          editTask={this.editTask}
+          completeTask={this.completeTask}
           />
-          <ContadorTareas totalTareas={totalTareas} tareasPendientes={tareasPendientes} />
+          <ContadorTareas totalTasks={totalTasks} pendingTasks={pendingTasks} />
         </div>
-      )
+      );
     }
   }
 
