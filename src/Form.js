@@ -5,7 +5,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 
 
-export default class FormularioTarea extends Component{
+export default class Form extends Component{
     render(){
         const {newTaskText, setNewTaskText, addTask} = this.props;
 

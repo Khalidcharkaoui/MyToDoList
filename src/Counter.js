@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class ContadorTareas extends Component{
+export default class Counter extends Component{
     render(){
         const{ totalTasks, pendingTasks } = this.props;
 

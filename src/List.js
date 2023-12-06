@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import ElementoTarea from "./ElementoTarea";
+import Item from "./Item";
 
-export default class ListaTareas extends Component {
+export default class List extends Component {
 
     render(){
         const { tasks, toggleTask, deleteTask, editTask, completeTask } = this.props;
@@ -9,7 +9,7 @@ export default class ListaTareas extends Component {
         return(
             <div className="task-list">
                 {tasks.map((task) => (
-                <ElementoTarea
+                <Item
                 key={task.id}
                 task={task}
                 toggleTask={toggleTask}

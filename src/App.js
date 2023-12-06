@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
-import FormularioTarea from "./FormularioTarea";
-import ListaTareas from "./ListaTareas";
-import ContadorTareas from "./ContadorTareas";
+import Form from "./Form";
+import List from "./List";
+import Counter from "./Counter";
+import "./App.css"
 
-const API_BASE_URL = "http://127.0.0.1:5000";
+const API_BASE_URL = "https://mylistserver.onrender.com";        //"http://127.0.0.1:5000";
 
 export default class App extends Component {
   constructor(props) {
@@ -119,19 +120,19 @@ export default class App extends Component {
       return(
         <div className="app-container">
           <h1> Lista de Tareas </h1>
-          <FormularioTarea
+          <Form
           newTaskText={newTaskText}
           setNewTaskText={(text) => this.setState({newTaskText : text})}
           addTask={this.addTask}
           />
-          <ListaTareas
+          <List
           tasks={tasks}
           toggleTask={this.toggleTask}
           deleteTask={this.deleteTask}
           editTask={this.editTask}
           completeTask={this.completeTask}
           />
-          <ContadorTareas totalTasks={totalTasks} pendingTasks={pendingTasks} />
+          <Counter totalTasks={totalTasks} pendingTasks={pendingTasks} />
         </div>
       );
     }

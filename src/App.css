@@ -1,38 +1,126 @@
-.App {
+body {
+  background-color: #282c34;
+  color: #61dafb;
+  font-family: 'fantasy', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
+h1 {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.task-form {
+  margin-bottom: 20px;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.task-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #61dafb;
+  background-color: transparent;
+  color: #61dafb;
+  font-size: 16px;
+  outline: none;
+}
+
+.task-form button {
+  width: 100%;
+  background-color: #61FAEA;
+  color: #282c34;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: #4a4a4a;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.task-item.completed {
+  background-color: green;
+  text-decoration: line-through;
+}
+
+.task-item button{
+  width: 100%;
+  background-color: #61FAEA;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.buttons{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-count {
+  margin-top: 20px;
+  color: #61dafb;
+}
+
+.task-item input {
+  background-color: transparent;
+  border: 1px solid #61dafb;
+  color: #61dafb;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  outline: none;
+}
+
+
+@media only screen and (min-width: 600px) {
+
+  .app-container {
+    padding: 40px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .task-form {
+    flex-direction: row;
   }
+
+  .task-form input {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+
+  .task-form input {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+
+  .task-form button {
+    width: auto;
+  }
+  
 }

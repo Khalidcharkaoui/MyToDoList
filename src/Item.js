@@ -4,7 +4,7 @@ import { faTrash, faEdit, faSave, faCheck } from "@fortawesome/free-solid-svg-ic
 
 
 
-export default class ElementoTarea extends Component{
+export default class Item extends Component{
     constructor(props){
         super(props);
         this.state= {
@@ -49,7 +49,7 @@ export default class ElementoTarea extends Component{
         <div className={`task-item ${task.completed ? "completed" : ""}`}>
             <span on onClick={() => toggleTask(task.id)}>{task.text}</span>
         
-        {isModalOpen && (
+        {isModalOpen ? (
             <div className="modal">
                 <input type="text" value={editedText} onChange={this.handleTextChange} />
                 <button onClick={saveChanges}>
@@ -59,8 +59,9 @@ export default class ElementoTarea extends Component{
                     Cancelar
                 </button>
         </div>
-        )}
-
+        ) : (
+        <>
+        <span onClick={() => toggleTask(task.id)}></span>
         <div className="buttons">
             <button onClick={this.handleEdit}>
                 <FontAwesomeIcon icon ={faEdit}/>
@@ -75,7 +76,9 @@ export default class ElementoTarea extends Component{
                 <FontAwesomeIcon icon={faCheck}/>
             </button>
         </div>
+        </>
+        )}
         </div>
       );
-        }
     }
+}
