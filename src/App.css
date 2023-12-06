@@ -36,6 +36,11 @@ h1 {
   outline: none;
 }
 
+.task-form input:focus {
+  border: none;
+  border-bottom: 2px solid #61dafb;
+}
+
 .task-form button {
   width: 100%;
   background-color: #61FAEA;
@@ -96,6 +101,11 @@ h1 {
   margin-bottom: 10px;
   font-size: 15px;
   outline: none;
+}
+
+.task-item input:focus{
+  border: none;
+  border-bottom: 2px solid #61dafb;
 }
 
 
