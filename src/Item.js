@@ -14,7 +14,7 @@ export default class Item extends Component{
     }
 
     openModal =() => {
-        this.setState({ isModalOpen: true });
+        this.setState({ isModalOpen: true});
     };
 
     closeModal = () => {
@@ -47,7 +47,7 @@ export default class Item extends Component{
 
       return(
         <div className={`task-item ${task.completed ? "completed" : ""}`}>
-            <span on onClick={() => toggleTask(task.id)}>{task.text}</span>
+            <span onClick={() => toggleTask(task.id)}>{task.text}</span>
         
         {isModalOpen ? (
             <div className="modal">
